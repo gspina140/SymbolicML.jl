@@ -4,5 +4,13 @@ using Test
 
 @testset "SymbolicML.jl" begin
     # Write your tests here.
-    @test abs_energy([1,2,3]) == 14
+    # Test Array
+    x = [1, 2, -3]
+
+    @test abs_energy(x) == 14
+
+    @test absolute_maximum(x) == 3
+
+    @test absolute_sum_of_changes(x) == 6
+
 end
