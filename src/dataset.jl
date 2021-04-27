@@ -14,3 +14,5 @@ abstract type AbstractRegressionDataset <: AbstractSupervisedDataset end
 struct ClassificationDataset <: AbstractClassificationDataset
     df::DataFrame
 end
+
+# julia> ex2 = CSV.read("/home/edu/.julia/dev/SymbolicML/data/Example_2.csv", DataFrame)
