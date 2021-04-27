@@ -24,24 +24,24 @@ Input:  x -> time series to calculate the feature of
             with x, a string, the name of a funcion(e.g. mean, variance),
             and n, an integer, the maximal number of lags to consider
 """
-function agg_autocorrelation(x::AbstractArray{T} where T<:Real, param::Dict)
-    func = param["f_agg"]
-    maxlag = param["maxlag"]
+function agg_autocorrelation(x::AbstractArray{T} where T<:Real, p::Dict{String, Any})
+    func = p["f_agg"]
+    maxlag = p["maxlag"]
 
-    R::AbstractArray
+    R::AbstractArray = zeros(maxlag)
 
     for i in 1:maxlag
         aux = 0.
         μ = mean(x)
         σ²= var(x)
 
-        for t in 1:(lenght(x) - i)
+        for t in 1:(length(x) - i)
             aux += (x[t] - μ) * (x[t+i] - μ)
         end
 
-        R[i] = ( 1 / ( (lenght(x) - i) * σ² )
+        R[i] = ( 1 / ( (length(x) - i) * σ² ) ) * aux
     end
 
-    return func(R)
-    
+    return getfield(Statistics, Symbol(func))(R)
+
 end

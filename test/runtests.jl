@@ -5,7 +5,7 @@ using Test
 @testset "SymbolicML.jl" begin
     # Write your tests here.
     # Test Array
-    x = [1, 2, -3]
+    x = [1.0, 2.0, -3.0]
 
     @test abs_energy(x) == 14
 
@@ -14,5 +14,5 @@ using Test
     @test absolute_sum_of_changes(x) == 6
 
     d = Dict("f_agg" => "mean", "maxlag" => 1)
-    @test agg_autocorrelation(x, d) = -0.2857142857142857
+    @test agg_autocorrelation(x, d) == -0.2857142857142857
 end
