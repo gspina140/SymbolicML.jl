@@ -13,4 +13,6 @@ using Test
 
     @test absolute_sum_of_changes(x) == 6
 
+    d = Dict("f_agg" => "mean", "maxlag" => 1)
+    @test agg_autocorrelation(x, d) = -0.2857142857142857
 end
