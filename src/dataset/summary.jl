@@ -182,3 +182,18 @@ function cid_ce(x::AbstractArray{T} where T<:Real, normalize::Bool)
 
     return sqrt(sum)
 end
+
+# Returns the percentage of values in x that are higher than t
+count_above(x::AbstractArray{T} where T<:Real, t::Float64) = count(i -> i > t, x) / length(x)
+
+# Returns the number of values in x that are higher than the mean of x
+count_above_mean(x::AbstractArray{T} where T<:Real) = count(i -> i > mean(x), x)
+
+# Returns the percentage of values in x that are lower than t
+count_below(x::AbstractArray{T} where T<:Real, t::Float64) = count(i -> i < t, x) / length(x)
+
+# Returns the number of values in x that are lower than the mean of x
+count_below_mean(x::AbstractArray{T} where T<:Real) = count(i -> i < mean(x), x)
+
+# cwt_coefficients
+#TODO
