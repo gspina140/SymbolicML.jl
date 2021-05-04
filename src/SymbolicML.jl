@@ -11,6 +11,7 @@ export autocorrelation
 export benford_correlation
 export binned_entropy
 export c3
+export change_quantiles
 export cid_ce
 export count_above
 export count_above_mean

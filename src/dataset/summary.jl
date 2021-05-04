@@ -9,11 +9,13 @@ absolute_maximum(x::AbstractArray{T} where T<:Real) = maximum(abs, x)
 
 # Sum over the abs value of consecutive changes in the series x
 function absolute_sum_of_changes(x::AbstractArray{T} where T<:Real)
-    res = 0.
+    diff = Real[]
+
     for i in 1:length(x)-1
-        res += abs(x[i+1] - x[i])
+        push!(diff,x[i+1] - x[i])
     end
-    return res
+
+    return sum(map(abs,diff))
 end
 
 """
@@ -25,9 +27,7 @@ Input:  x -> time series to calculate the feature of
             with x, a string, the name of the aggregation funcion(e.g. mean, variance, ...),
             and n, an integer, the maximal number of lags to consider
 """
-function agg_autocorrelation(x::AbstractArray{T} where T<:Real, p::Dict{String, Any})
-    func = p["f_agg"]
-    maxlag = p["maxlag"]
+function agg_autocorrelation(x::AbstractArray{T} where T<:Real, func::String, maxlag::Int)
 
     R::AbstractArray = zeros(maxlag)
     μ = mean(x)
@@ -48,19 +48,6 @@ function agg_autocorrelation(x::AbstractArray{T} where T<:Real, p::Dict{String, 
 end
 
 """
-agg_linear_trend
-Calculates a linear least-sqaures regression for values of the
-time series that we aggregated over chunks versus the sequence
-from 0 up to the number of chunks minus one.
-Input: x-> time series to calculate the feature of
-       p-> dictionaries {"attr":x, "chunk_len":l, "f_agg":f}
-            x,f strings;
-            l integer
-"""
-
-#TODO
-
-"""
 Implements a vectorized approximate entropy algorithm.
 Input: x-> time series to calculate the feature of
        m-> length of compared run of data (int)
@@ -78,7 +65,6 @@ function approximate_entropy(x::AbstractArray{T} where T<:Real, m::Int, r::Real)
     # GO AHEAD
 end
 """
-# ar_coefficient TODO
 
 # augmented_dickey_fuller TODO
 
@@ -131,7 +117,7 @@ function binned_entropy(x::AbstractArray{T} where T<:Real, max_bins::Int)
     # Vector pₖ with percentages of samples in bin k
     p = hist / length(x)
 
-    # Where probability is 0, set to 1 to avoid Nan values
+    # Where the percentage is 0, set to 1 to avoid Nan values?
     p[p.==0] .= 1
 
     # Return Entropy = - ∑ᵐᵢ₌₁ pᵢ * log(pᵢ)
@@ -158,11 +144,23 @@ First takes a corridor given by the quatiles ql and qh of
 the distribution of x. Then calculates the average, absolute
 value of consecutive changes of the series x inside this corridor.
 """
+function change_quantiles(x::AbstractArray{T} where T<:Real, ql::Float64, qh::Float64, f_agg::String)
+        # Compute the quantiles
+        q = quantile(vec(x), [ql, qh], sorted=true)
 
-#TODO
+        # Corridor between the 2 quantiles
+        corr = Real[]
+        for i in 1:length(x)
+            if x[i] >= q[1] && x[i] <= q[2]
+                push!(corr, x[i])
+            end
+        end
+
+        # Return the aggregation function of corridor
+        return getfield(Statistics, Symbol(f_agg))(corr)
+end
 
 #This function calculator is an estimate for a time series complexity
-
 function cid_ce(x::AbstractArray{T} where T<:Real, normalize::Bool)
     n = length(x)
 
