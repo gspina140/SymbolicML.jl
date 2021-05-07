@@ -17,5 +17,25 @@ export count_above
 export count_above_mean
 export count_below
 export count_below_mean
+export first_location_of_maximum
+export first_location_of_minimum
+export has_duplicate
+export has_duplicate_max
+export has_duplicate_min
+export large_standard_deviation
+export last_location_of_maximum
+export last_location_of_minimum
+export mean_abs_change
+export mean_change
+export mean_n_absolute_max
+export longest_strike_above_mean
+export longest_strike_below_mean
+export mean_second_derivative_central
+export number_crossing_m
+export percentage_of_reoccurring_datapoints_to_all_datapoints
+export percentage_of_reoccurring_values_to_all_values
+export range_count
+export ratio_beyond_r_sigma
+export ratio_value_number_to_time_series_length
 
 end

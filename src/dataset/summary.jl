@@ -193,5 +193,192 @@ count_below(x::AbstractArray{T} where T<:Real, t::Float64) = count(i -> i < t, x
 # Returns the number of values in x that are lower than the mean of x
 count_below_mean(x::AbstractArray{T} where T<:Real) = count(i -> i < mean(x), x)
 
-# cwt_coefficients
-#TODO
+"""
+Return the first location of the maximum value of x.
+The position is calculated relatively to the length of x
+"""
+first_location_of_maximum(x::AbstractArray{T} where T<:Real) = findmax(x)[2] / length(x)
+
+"""
+Return the first location of the minimum value of x.
+The position is calculated relatively to the length of x
+"""
+first_location_of_minimum(x::AbstractArray{T} where T<:Real) = findmin(x)[2] / length(x)
+
+# Checks if any value in x occurs more than once
+has_duplicate(x::AbstractArray{T} where T<:Real) = return length(x) != length(unique(x))
+
+# Checks if the maximum value of x is observed more than once
+has_duplicate_max(x::AbstractArray{T} where T<:Real) = if count(i -> i == maximum(x), x) > 1 return true else return false end
+
+# Checks if the minimum value of x is observed more than once
+has_duplicate_min(x::AbstractArray{T} where T<:Real) = if count(i -> i == minimum(x), x) > 1 return true else return false end
+
+"""
+Does time series have large standard deviation?
+Return boolean denoting if the standard deviation of x
+is higher than 'r' times the range.
+"""
+large_standard_deviation(x::AbstractArray{T} where T<:Real, r::Float64) = return std(x) > r * (maximum(x) - minimum(x))
+
+# Returns the relative last location of tha maximum value of x
+last_location_of_maximum(x::AbstractArray{T} where T<:Real) = findmax(reverse(x))[2] / length(x)
+
+# Returns the relative last location of tha minimum value of x
+last_location_of_minimum(x::AbstractArray{T} where T<:Real) = findmin(reverse(x))[2] / length(x)
+
+# Returns the length of the longest consecutive subsequence in x that is bigger than the mean of x
+function longest_strike_above_mean(x::AbstractArray{T} where T<:Real)
+    aux = x.>mean(x)
+    max_strike = 0
+    i=1
+
+    while i <= length(aux)
+        if aux[i] == 1
+            c = 1
+            i+=1
+            while i <= length(aux)
+                if aux[i] == 1
+                    c+=1
+                else
+                    break
+                end
+                i+=1
+            end
+            if c > max_strike
+                max_strike = c
+            end
+        else
+            i+=1
+        end
+    end
+
+    return max_strike
+end
+
+# Returns the length of the longest consecutive subsequence in x that is lower than the mean of x
+function longest_strike_below_mean(x::AbstractArray{T} where T<:Real)
+    aux = x.<mean(x)
+    max_strike = 0
+    i=1
+
+    while i <= length(aux)
+        if aux[i] == 1
+            c = 1
+            i+=1
+            while i <= length(aux)
+                if aux[i] == 1
+                    c+=1
+                else
+                    break
+                end
+                i+=1
+            end
+            if c > max_strike
+                max_strike = c
+            end
+        else
+            i+=1
+        end
+    end
+
+    return max_strike
+end
+
+# Average over first differences
+function mean_abs_change(x::AbstractArray{T} where T<:Real)
+    diff = Real[]
+
+    for i in 1:length(x)-1
+        push!(diff,x[i+1] - x[i])
+    end
+
+    return mean(map(abs, diff))
+end
+
+# Average over time sereis differences
+mean_change(x::AbstractArray{T} where T<:Real) = (x[end] - x[1]) / (length(x) - 1)
+
+# Calculates the arithmetic mean of the n absolute maximum values of the time series
+function mean_n_absolute_max(x::AbstractArray{T} where T<:Real, n::Int)
+    aux = sort(map(abs, x))
+    return mean(aux[length(aux) - (n - 1) : end])
+end
+
+# Returns the mean value of a central approximation of the secondo derivative
+mean_second_derivative_central(x::AbstractArray{T} where T<:Real) = (x[end] - x[end - 1] - x[2] - x[1]) / (2 * (length(x) - 2))
+
+# Calculates the number of crossing of x on m.
+function number_crossing_m(x::AbstractArray{T} where T<:Real, m::Float64)
+    positive = x .> m
+    diff = Int[]
+
+    for i in 1:length(x) - 1
+        push!(diff, positive[i+1] - positive[i])
+    end
+
+    return count(i -> i != 0, diff)
+end
+
+# Returns the percentage of non-unique data points.
+function percentage_of_reoccurring_datapoints_to_all_datapoints(x::AbstractArray{T} where T<:Real)
+    value_counts = countmap(x)
+    reoccurring_values = 0
+
+    for item in value_counts
+        if item[2] > 1
+            reoccurring_values += 1
+        end
+    end
+
+    return reoccurring_values / length(x)
+end
+
+# Returns the percentage of values that are present in the time series more than once
+function percentage_of_reoccurring_values_to_all_values(x::AbstractArray{T} where T<:Real)
+    value_counts = countmap(x)
+    reoccurring_values = 0
+    unique_values = 0
+
+    for item in value_counts
+        if item[2] > 1
+            reoccurring_values += 1
+        else
+            unique_values += 1
+        end
+    end
+
+    return reoccurring_values / unique_values
+end
+
+# Count observed values within the interval [min, max)
+range_count(x::AbstractArray{T} where T<:Real, min::Float64, max::Float64) = count(i -> i>=min && i<max, x)
+
+# Ratio of values that are mroe than r * std(x) away from the mean of x
+function ratio_beyond_r_sigma(x::AbstractArray{T} where T<:Real, r::Float64)
+    μ = mean(x)
+    r_sigma = r * std(x)
+
+    aux = map(abs, map(x -> x - μ, x))
+
+    aux = Array([aux[i] > r_sigma ? aux[i] : 0 for i in 1:length(aux)])
+
+    return sum(aux) / length(x)
+end
+
+"""
+Returns a factow which is 1 if all values in the time series occur only once,
+and below one if this is not the case
+"""
+function ratio_value_number_to_time_series_length(x::AbstractArray{T} where T<:Real)
+    value_counts = countmap(x)
+    unique = Real[]
+
+    for item in value_counts
+        if item[2] == 1
+            push!(unique, item[2])
+        end
+    end
+
+    return length(unique) / length(x)
+end
