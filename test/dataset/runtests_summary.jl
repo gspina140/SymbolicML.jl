@@ -107,4 +107,14 @@
 
     @test ratio_value_number_to_time_series_length(x) == 1.
     @test ratio_value_number_to_time_series_length(y) == 1.
+
+    @test root_mean_square(x) == 3.1622776601683795
+    @test root_mean_square(y) == 6.782329983125268
+
+#   @test sample_entropy(x) == NaN != NaN ...
+    @test sample_entropy(y) == 0.11778303565638351
+
+    @test sum_of_reoccurring_data_points(x) == 0
+    @test sum_of_reoccurring_data_points(y) == 0
+
 end

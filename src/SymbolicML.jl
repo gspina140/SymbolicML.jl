@@ -37,5 +37,8 @@ export percentage_of_reoccurring_values_to_all_values
 export range_count
 export ratio_beyond_r_sigma
 export ratio_value_number_to_time_series_length
+export root_mean_square
+export sample_entropy
+export sum_of_reoccurring_data_points
 
 end

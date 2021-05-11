@@ -382,3 +382,46 @@ function ratio_value_number_to_time_series_length(x::AbstractArray{T} where T<:R
 
     return length(unique) / length(x)
 end
+
+# Returns the root mean square of the time series
+root_mean_square(x::AbstractArray{T} where T<:Real) = sqrt(mean(map(x -> x^2, x)))
+
+# Calculate and return sample entropy of x
+function sample_entropy(x::AbstractArray{T} where T<:Real)
+    m = 2
+    tolerance = 0.2 * std(x)
+
+    xmi = Array([x[i : i+m-1] for i in 1:length(x)-m])
+    xmj = Array([x[i : i+m-1] for i in 1:length(x)-m+1])
+
+    xmi = maximum(collect(hcat(xmi...)'), dims=2)
+    xmj = maximum(collect(hcat(xmj...)'), dims=2)
+
+    B = sum( Array([sum(x -> x <= tolerance, map(abs, xmi_i .- xmj)) - 1 for xmi_i in xmi]))
+
+    m += 1
+    xm = Array([x[i:i+m-1] for i in 1:length(x)-m+1])
+    xm = maximum(collect(hcat(xm...)'), dims=2)
+
+    A = sum( Array([sum(x -> x <= tolerance, map(abs, xm_i .- xm)) - 1 for xm_i in xm]))
+
+    return -log(A/B)
+end
+
+# Returns the sum of all data points, that are present in the time series more than once
+function sum_of_reoccurring_data_points(x::AbstractArray{T} where T<:Real)
+    value_counts = countmap(x)
+    reoc = Real[]
+
+    for item in value_counts
+        if item[2] > 1
+            for i in 1:item[2]
+                push!(reoc, item[1])
+            end
+        end
+    end
+
+    return sum(reoc)
+end
+
+# Returns the sum fo all values, that are present in the time series more than once
