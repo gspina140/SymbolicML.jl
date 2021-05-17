@@ -320,36 +320,38 @@ function number_crossing_m(x::AbstractArray{T} where T<:Real, m::Float64)
     return count(i -> i != 0, diff)
 end
 
-# Returns the percentage of non-unique data points.
-function percentage_of_reoccurring_datapoints_to_all_datapoints(x::AbstractArray{T} where T<:Real)
-    value_counts = countmap(x)
-    reoccurring_values = 0
+# TODO Gabriele
+# # Returns the percentage of non-unique data points.
+# function percentage_of_reoccurring_datapoints_to_all_datapoints(x::AbstractArray{T} where T<:Real)
+#     value_counts = countmap(x)
+#     reoccurring_values = 0
+#
+#     for item in value_counts
+#         if item[2] > 1
+#             reoccurring_values += 1
+#         end
+#     end
+#
+#     return reoccurring_values / length(x)
+# end
 
-    for item in value_counts
-        if item[2] > 1
-            reoccurring_values += 1
-        end
-    end
-
-    return reoccurring_values / length(x)
-end
-
-# Returns the percentage of values that are present in the time series more than once
-function percentage_of_reoccurring_values_to_all_values(x::AbstractArray{T} where T<:Real)
-    value_counts = countmap(x)
-    reoccurring_values = 0
-    unique_values = 0
-
-    for item in value_counts
-        if item[2] > 1
-            reoccurring_values += 1
-        else
-            unique_values += 1
-        end
-    end
-
-    return reoccurring_values / unique_values
-end
+# TODO Gabriele
+# # Returns the percentage of values that are present in the time series more than once
+# function percentage_of_reoccurring_values_to_all_values(x::AbstractArray{T} where T<:Real)
+#     value_counts = countmap(x)
+#     reoccurring_values = 0
+#     unique_values = 0
+#
+#     for item in value_counts
+#         if item[2] > 1
+#             reoccurring_values += 1
+#         else
+#             unique_values += 1
+#         end
+#     end
+#
+#     return reoccurring_values / unique_values
+# end
 
 # Count observed values within the interval [min, max)
 range_count(x::AbstractArray{T} where T<:Real, min::Float64, max::Float64) = count(i -> i>=min && i<max, x)
@@ -366,22 +368,23 @@ function ratio_beyond_r_sigma(x::AbstractArray{T} where T<:Real, r::Float64)
     return sum(aux) / length(x)
 end
 
-"""
-Returns a factow which is 1 if all values in the time series occur only once,
-and below one if this is not the case
-"""
-function ratio_value_number_to_time_series_length(x::AbstractArray{T} where T<:Real)
-    value_counts = countmap(x)
-    unique = Real[]
-
-    for item in value_counts
-        if item[2] == 1
-            push!(unique, item[2])
-        end
-    end
-
-    return length(unique) / length(x)
-end
+# TODO Gabriele
+# """
+# Returns a factow which is 1 if all values in the time series occur only once,
+# and below one if this is not the case
+# """
+# function ratio_value_number_to_time_series_length(x::AbstractArray{T} where T<:Real)
+#     value_counts = countmap(x)
+#     unique = Real[]
+#
+#     for item in value_counts
+#         if item[2] == 1
+#             push!(unique, item[2])
+#         end
+#     end
+#
+#     return length(unique) / length(x)
+# end
 
 # Returns the root mean square of the time series
 root_mean_square(x::AbstractArray{T} where T<:Real) = sqrt(mean(map(x -> x^2, x)))
@@ -408,20 +411,20 @@ function sample_entropy(x::AbstractArray{T} where T<:Real)
     return -log(A/B)
 end
 
-# Returns the sum of all data points, that are present in the time series more than once
-function sum_of_reoccurring_data_points(x::AbstractArray{T} where T<:Real)
-    value_counts = countmap(x)
-    reoc = Real[]
-
-    for item in value_counts
-        if item[2] > 1
-            for i in 1:item[2]
-                push!(reoc, item[1])
-            end
-        end
-    end
-
-    return sum(reoc)
-end
+# # Returns the sum of all data points, that are present in the time series more than once
+# function sum_of_reoccurring_data_points(x::AbstractArray{T} where T<:Real)
+#     value_counts = countmap(x)
+#     reoc = Real[]
+#
+#     for item in value_counts
+#         if item[2] > 1
+#             for i in 1:item[2]
+#                 push!(reoc, item[1])
+#             end
+#         end
+#     end
+#
+#     return sum(reoc)
+# end
 
 # Returns the sum fo all values, that are present in the time series more than once
