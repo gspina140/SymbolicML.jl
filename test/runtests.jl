@@ -2,4 +2,4 @@ using SymbolicML
 
 using Test
 
-include("dataset/runtests_summary.jl")
+include("functions/runtests_summary.jl")

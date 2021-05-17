@@ -6,10 +6,12 @@ using Plots
 using StatsPlots
 
 include("dataset.jl")
+include("functions.jl")
 
 export discrete_derivative, discrete_derivatives
 export ClassificationDataset
 export siemensDataInfo, siemensData
+
 export select_attributes
 export abs_energy
 export absolute_maximum
