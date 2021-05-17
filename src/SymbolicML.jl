@@ -1,8 +1,16 @@
 module SymbolicML
+
+using CSV
 using DataFrames
+using Plots
+using StatsPlots
 
 include("dataset.jl")
 
+export discrete_derivative, discrete_derivatives
+export ClassificationDataset
+export siemensDataInfo, siemensData
+export select_attributes
 export abs_energy
 export absolute_maximum
 export absolute_sum_of_changes
