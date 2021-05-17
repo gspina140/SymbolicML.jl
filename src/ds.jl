@@ -36,13 +36,13 @@ dimension(mf::ModalFrame) = mf.dimension
         @assert dimension == curr_dimension "Each attribute must have the same dimension."
     end
 
-    if dimension > 0
-        typ = eltype(data[1, Symbol(colnams[1])])
-        for colname in colnames
-            curr_typ = eltype(data[1, Symbol(colname)])
-            @assert typ == cur_typ "Each modal frame with higher-than-zero dimension must have the same element types"
-        end
-    end
+    # if dimension > 0
+    #     typ = eltype(data[1, Symbol(colnams[1])])
+    #     for colname in colnames
+    #         curr_typ = eltype(data[1, Symbol(colname)])
+    #         @assert typ == cur_typ "Each modal frame with higher-than-zero dimension must have the same element types."
+    #     end
+    # end
 
     views = Vector{DataFrameRow}(undef, nrow(data))
     for i in 1:nrow(data)
@@ -55,8 +55,8 @@ Base.size(mf::ModalFrame) = (nrow(mf.data),)
 Base.getindex(mf::ModalFrame, i::Int) = mf.views[i]
 
 struct ClassificationDataset
-    # lowestdim::Int
-    # highestdim::Int
+    ldim::Int
+    hdim::Int
     frames::Vector{ModalFrame}
     instances::Vector{ModalInstance}
     classes::CategoricalArray
@@ -85,12 +85,9 @@ function ClassificationDataset(frames::Vector{ModalFrame}, classes::CategoricalA
         push!(instances, instance)
     end
 
-    l_dimension, h_dimension = extrema([dimension(i) for i in frames])
+    ldim, hdim = extrema([dimension(i) for i in frames])
 
-    @show l_dimension
-    @show h_dimension
-
-    ClassificationDataset(frames, instances, classes)
+    ClassificationDataset(ldim, hdim, frames, instances, classes)
 end
 
 instance(cs::ClassificationDataset, i::Int) = cs.instances[i]
@@ -105,3 +102,26 @@ function Base.show(io::IO, ::MIME"text/plain", ds::ClassificationDataset)
         println(io)
     end
 end
+
+X, y = read_data_labeled(joinpath(dirname(pathof(GBDTs)), "..", "data", "auslan_youtube8"));
+
+# adesso voglia passare da MTS a ClassificationDataset
+
+my_frame = DataFrame()
+
+for attr in names(X)
+    insertcols!(my_frame, attr => Array{Float64,1}[])
+end
+
+# for each instance
+for i in 1:length(X)
+    array_data = Array{Float64, 2}(X[i])
+    push!(my_frame, [array_data[:, j] for j in 1:length(names(X))])
+end
+
+auslan = ClassificationDataset([ModalFrame(my_frame)], CategoricalArray(y))
+
+
+# julia> p = MonteCarlo(30, 5)
+# julia> using Random; Random.seed!(1)
+# julia> model = induce_tree(grammar, :b, p, auslan.frames[1], y, 6);
