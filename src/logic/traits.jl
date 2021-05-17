@@ -60,25 +60,48 @@ ismodal_relation(::RectangleTrait, x)       = true
 ismodal_relation(::CubeTrait, x)            = true
 
 
-# check_relation(r::T, os::NTuple{2, AbstractOntology}) where {T} = check_relation(OntologicalTrait(T), r, os)
-# function check_relation(::IntervalTrait, r, os)
-#     @show r
-#     @show os
+# # check_relation(r::T, os::NTuple{2, AbstractOntology}) where {T} = check_relation(OntologicalTrait(T), r, os)
+# # function check_relation(::IntervalTrait, r, os)
+# #     @show r
+# #     @show os
+# # end
+#
+# # function check_relation(r::T, o1::S1, o2::S2) where {T,S1,S2}
+# #     check_relation(OntologicalTrait(T), OntologicalTrait(S1), OntologicalTrait(S2), r, o1, o2)
+# # end
+# # function check_relation(::IntervalTrait, ::IntervalTrait, ::IntervalTrait, r, o1, o2)
+# #     @show r
+# #     @show o1
+# #     @show o2
+# #     nothing
+# # end
+#
+# function check_relation(r::RT, os::NTuple{2,OT}) where {RT,OT}
+#     check_relation(OntologicalTrait(RT), OntologicalTrait(OT), r, os)
 # end
-
-function check_relation(r::T, o1::S1, o2::S2) where {T,S1,S2}
-    check_relation(OntologicalTrait(T), OntologicalTrait(S1), OntologicalTrait(S2), r, o1, o2)
-end
-function check_relation(::IntervalTrait, ::IntervalTrait, ::IntervalTrait, r, o1, o2)
-    @show r
-    @show o1
-    @show o2
-    nothing
-end
-
-# check_relation(r::T, os::NTuple{2, AbstractOntology}) where {T} = check_relation(OntologicalTrait(T), r, os)
-
-# function check_relation(::IntervalTrait, r, os)
-#     @show r
-#     @show os
+#
+# function check_relation(::IntervalTrait, ::IntervalTrait, r::AbstractIntervalRelation, os::NTuple{2,Interval})
+#     if iscrisp(r.algebra)
+#         check_crisp_relation(IntervalTrait(), IntervalTrait(), r, os)
+#     else
+#         print("fuzzy relation.. boss..")
+#     #     check_fuzzy_relation(::IntervalTrait, ::IntervalTrait, r, os)
+#     end
 # end
+#
+# function check_crisp_relation(::IntervalTrait, ::IntervalTrait, r::AbstractIntervalRelation, os::NTuple{2,Interval})
+#     check_crisp_relation(r, os)
+# end
+#
+# # TODO qua uso <, in realtà dovrebbe essere dinamico, cioè usare il crisp o fuzzy <
+#
+# function check_crisp_relation(::ExistentialIntervalRelation{:L}, os::NTuple{2,Interval})
+#     return os[1].y < os[2].x ? 0.0 : 1.0
+# end
+#
+# # check_relation(r::T, os::NTuple{2, AbstractOntology}) where {T} = check_relation(OntologicalTrait(T), r, os)
+#
+# # function check_relation(::IntervalTrait, r, os)
+# #     @show r
+# #     @show os
+# # end
