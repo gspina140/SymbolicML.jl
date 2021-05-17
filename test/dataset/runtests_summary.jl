@@ -4,6 +4,7 @@
     #x = [1.0, 2.0, -3.0]
     x=[-5.,-4.,-3.,-2.,-1.,0,1.,2.,3.,4.,5.]
     y=[1.,2.,3.,4.,5.,6.,7.,8.,9.,-10.,11.]
+    z=[1.,1.,1.]
 
     @test abs_energy(x) == 110.
     @test abs_energy(y) == 506.
@@ -29,12 +30,14 @@
     @test c3(x,5) == 0.
     @test c3(x,4) == 0.
     @test c3(y,5) == 66.
+    @test c3(x,6) == 0.
 
     @test change_quantiles(x, 0., 1., "mean") == 0
     @test change_quantiles(y, 0., 1., "var") == 10.266666666666667
 
     @test cid_ce(x, true) == 0.9534625892455924
     @test cid_ce(y, false) == 28.460498941515414
+    @test cid_ce(z, true) == 0.
 
     @test count_above(x, 4.) == 0.09090909090909091
     @test count_above(y, 3.) == 0.6363636363636364
