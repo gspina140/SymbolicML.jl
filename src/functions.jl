@@ -27,7 +27,8 @@ Input:  x -> time series to calculate the feature of
             with x, a string, the name of the aggregation funcion(e.g. mean, variance, ...),
             and n, an integer, the maximal number of lags to consider
 """
-function agg_autocorrelation(x::AbstractArray{T} where T<:Real, func::String, maxlag::Int)
+#TODO functions that calls function must have parameter of type "Function" not "String"
+function agg_autocorrelation(x::AbstractArray{T} where T<:Real, f::Function, maxlag::Int)
 
     R::AbstractArray = zeros(maxlag)
     μ = mean(x)
@@ -43,7 +44,7 @@ function agg_autocorrelation(x::AbstractArray{T} where T<:Real, func::String, ma
         R[i] = ( 1 / ( (length(x) - i) * σ² ) ) * aux
     end
 
-    return getfield(Statistics, Symbol(func))(R)
+    return f(R)
 
 end
 

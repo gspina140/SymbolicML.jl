@@ -9,7 +9,6 @@ include("dataset.jl")
 include("functions.jl")
 
 export discrete_derivative, discrete_derivatives
-export ClassificationDataset
 export siemensDataInfo, siemensData
 
 export select_attributes

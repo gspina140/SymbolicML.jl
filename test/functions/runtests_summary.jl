@@ -15,8 +15,8 @@
     @test absolute_sum_of_changes(x) == 10
     @test absolute_sum_of_changes(y) == 48
 
-    @test agg_autocorrelation(x,"mean",2) == 0.6212121212121213#0.6213
-    @test agg_autocorrelation(y,"mean",2) == -0.18300395256916996#-0.1825
+    @test agg_autocorrelation(x,mean,2) == 0.6212121212121213#0.6213
+    @test agg_autocorrelation(y,mean,2) == -0.18300395256916996#-0.1825
 
     @test autocorrelation(x, 2) == 0.5151515151515152#0.5151
     @test autocorrelation(y,2) == 0.015546772068511216#0.0155

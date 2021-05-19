@@ -103,6 +103,7 @@ function Base.show(io::IO, ::MIME"text/plain", ds::ClassificationDataset)
     end
 end
 
+using MultivariateTimeSeries
 X, y = read_data_labeled(joinpath(dirname(pathof(GBDTs)), "..", "data", "auslan_youtube8"));
 
 # adesso voglia passare da MTS a ClassificationDataset
