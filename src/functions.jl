@@ -437,3 +437,23 @@ function window_slice(x::AbstractArray{T} where T<:Real;
         ismissing(from) && return x[1:to]
         return x[from:to]
 end
+
+using StatsBase
+function paa(x::AbstractArray{T} where T <: Real;
+        n_chunks::Union{Missing,Int}=missing,
+        f::Function=mean,
+        kwargs...)
+    if ismissing(n_chunks) return x
+    else
+        N = length(x)
+        @assert 0 ≤ n_chunks && n_chunks ≤ N "The number of chunks must be in [0,$(N)]"
+
+        y = Array{Float64}(undef, n_chunks) # TODO Float64?
+        for i in 1:n_chunks
+            l = Int(ceil((N*(i-1)/n_chunks) + 1))
+            h = Int(ceil(N*i/n_chunks))
+            y[i] = f(x[l:h]; kwargs...)
+        end
+        return y
+    end
+end

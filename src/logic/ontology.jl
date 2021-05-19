@@ -1,5 +1,3 @@
-import Base: <
-
 ##
 # Abstract ontology.
 abstract type AbstractOntology end
@@ -24,15 +22,14 @@ struct PropositionalState <: AbstractPropositionalOntology end
 
 ##
 # (Temporal) Point ontology.
-struct Point{T<:Int64} <: AbstractTemporalOntology
+struct Point{T<:Int} <: AbstractTemporalOntology
     x::T
 end
 
 const point(x) = Point(x)
-# <(p::Point, q::Point) = p.x < q.x ? true : false
 
 # (Temporal) Interval ontology.
-struct Interval{T<:Int64} <: AbstractTemporalOntology
+struct Interval{T<:Int} <: AbstractTemporalOntology
     x::Point{T}     # start point
     y::Point{T}     # end point
 end
@@ -40,7 +37,7 @@ end
 const interval(x,y) = Interval(point(x), point(y))
 
 # (Spatial) Rectangle ontology.
-struct Rectangle{T<:Int64} <: AbstractSpatialOntology
+struct Rectangle{T<:Int} <: AbstractSpatialOntology
     x::Interval{T}  # first spatial dimension
     y::Interval{T}  # second spatial dimension
 end
@@ -48,7 +45,7 @@ end
 const rectangle((xx,xy),(yx,yy)) = Rectangle(interval(xx,xy), interval(yx,yy))
 
 # (Spatio-temporal) Cube ontology.
-struct Cube{S<:Int64,T<:Int64} <: AbstractSpatioTemporalOntology
+struct Cube{S<:Int,T<:Int} <: AbstractSpatioTemporalOntology
     x::Interval{S}  # first spatial dimension
     y::Interval{S}  # second spatial dimension
     z::Interval{T}  # temporal dimension

@@ -1,4 +1,5 @@
 struct ModalInstance <: AbstractVector{SubDataFrame}
+    # worlds::Set{<:AbstractOntology} # TODO add set of worlds, for the semantics (RBC)
     rows::Vector{DataFrameRow}
 end
 
@@ -17,6 +18,7 @@ Base.size(mi::ModalInstance) = (nrow(mi.rows),)
 Base.getindex(mi::ModalInstance, i::Int) = mi.rows[i]
 
 struct ModalFrame <: AbstractVector{SubDataFrame}
+    # name::String # TODO add name?
     dimension::Int  # (0=static, 1=timeseries, 2=images, ecc.)
     data::DataFrame
     views::Vector{DataFrameRow} # intraframe instances (i.e., first, second, .., series)
@@ -90,8 +92,16 @@ function ClassificationDataset(frames::Vector{ModalFrame}, classes::CategoricalA
     ClassificationDataset(ldim, hdim, frames, instances, classes)
 end
 
-instance(cs::ClassificationDataset, i::Int) = cs.instances[i]
+instance(cs::ClassificationDataset, i::Int) = cs.instances[i] # TODO cs -> ds (either sup or unsupervised)
 instance(cs::ClassificationDataset, i::Int, f::Int) = cs.instances[i][f]
+function attributes(ds::ClassificationDataset)
+    d = Dict{Int,Array{String,1}}()
+    for (fid,frame) in enumerate(ds.frames)
+        d[fid] = names(frame.data)
+    end
+    return d
+end
+attributes(ds::ClassificationDataset, fid::Int) = names(ds.frames[fid].data)
 
 function Base.show(io::IO, ::MIME"text/plain", ds::ClassificationDataset)
     println(io, "Classification dataset with $(length(ds.instances)) instances")
@@ -103,6 +113,19 @@ function Base.show(io::IO, ::MIME"text/plain", ds::ClassificationDataset)
     end
 end
 
+# TODO
+# possible test: all([auslan.instances[i].rows[1][attr] === auslan.frames[1].data[i,attr] for i in 1:length(auslan.instances) for attr in attributes(auslan, 1)])
+function transform!(ds::ClassificationDataset, f::Function, fid::Int; kwargs...)
+    for attr in attributes(ds, fid)
+        for i in 1:length(nrow(ds.frames[fid].data))
+            ds.frames[fid].data[i,attr] = f(ds.frames[fid].data[i,attr]; kwargs...)
+        end
+    end
+end
+
+# function transform!(ds::ClassificationDataset, f::Function; kwargs...)
+
+using MultivariateTimeSeries
 X, y = read_data_labeled(joinpath(dirname(pathof(GBDTs)), "..", "data", "auslan_youtube8"));
 
 # adesso voglia passare da MTS a ClassificationDataset
