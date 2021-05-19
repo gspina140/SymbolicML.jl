@@ -1,4 +1,4 @@
-@testset "dataset/summary.jl" begin
+@testset "functions/summary.jl" begin
     # Write your tests here.
     # Test Array
     #x = [1.0, 2.0, -3.0]
@@ -96,11 +96,11 @@
     @test number_crossing_m(x, 2.0) == 1
     @test number_crossing_m(y, 7.0) == 3
 
-    @test percentage_of_reoccurring_datapoints_to_all_datapoints(x) == 0.0
-    @test percentage_of_reoccurring_datapoints_to_all_datapoints(y) == 0.0
-
-    @test percentage_of_reoccurring_values_to_all_values(x) == 0.0
-    @test percentage_of_reoccurring_values_to_all_values(y) == 0.0
+    # @test percentage_of_reoccurring_datapoints_to_all_datapoints(x) == 0.0
+    # @test percentage_of_reoccurring_datapoints_to_all_datapoints(y) == 0.0
+    #
+    # @test percentage_of_reoccurring_values_to_all_values(x) == 0.0
+    # @test percentage_of_reoccurring_values_to_all_values(y) == 0.0
 
     @test range_count(x, 0., 2.) == 2
     @test range_count(y, 6., 9.) == 3
@@ -108,8 +108,8 @@
     @test ratio_beyond_r_sigma(x, 1.) == 1.6363636363636365
     @test ratio_beyond_r_sigma(y, 2.) == 1.2892561983471074
 
-    @test ratio_value_number_to_time_series_length(x) == 1.
-    @test ratio_value_number_to_time_series_length(y) == 1.
+    # @test ratio_value_number_to_time_series_length(x) == 1.
+    # @test ratio_value_number_to_time_series_length(y) == 1.
 
     @test root_mean_square(x) == 3.1622776601683795
     @test root_mean_square(y) == 6.782329983125268
@@ -117,7 +117,7 @@
 #   @test sample_entropy(x) == NaN != NaN ...
     @test sample_entropy(y) == 0.11778303565638351
 
-    @test sum_of_reoccurring_data_points(x) == 0
-    @test sum_of_reoccurring_data_points(y) == 0
+    # @test sum_of_reoccurring_data_points(x) == 0
+    # @test sum_of_reoccurring_data_points(y) == 0
 
 end

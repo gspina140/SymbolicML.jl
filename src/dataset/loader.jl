@@ -32,21 +32,21 @@ function readARFF(p::String)
     end
 end
 
-for (i, x) in enumerate([1,2,3,4])
-    println(i, " ", x)
-    i=3
-end
+# for (i, x) in enumerate([1,2,3,4])
+#     println(i, " ", x)
+#     i=3
+# end
 
-@grammar begin
-    S   = UnivGlobal(F) | ExistGlobal(F)
-    F   = UnivL(implies(F,F))
-    F   = ExistL(and(F,F))
-    F   = implies(F,F)
-    F   = and(F,F)
-    F   = f(A)
-end
-
-@grammar begin
-    S   = ExistentialIntervalRelation{:L}(and(F,F))
-    F   = f(A)
-end
+# @grammar begin
+#     S   = UnivGlobal(F) | ExistGlobal(F)
+#     F   = UnivL(implies(F,F))
+#     F   = ExistL(and(F,F))
+#     F   = implies(F,F)
+#     F   = and(F,F)
+#     F   = f(A)
+# end
+#
+# @grammar begin
+#     S   = ExistentialIntervalRelation{:L}(and(F,F))
+#     F   = f(A)
+# end

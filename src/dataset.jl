@@ -1,5 +1,5 @@
 include("dataset/loader.jl") # caricatore di dataset, o lettura di datasets
-include("dataset/summary.jl") # descrizione del dataset per intero, oppure per istanze
+# include("dataset/summary.jl") # descrizione del dataset per intero, oppure per istanze
 include("dataset/transformation.jl") # trasformazione del dataset; e.g., differenze finite (cioè derivate discrete)
 include("dataset/writer.jl") # scrivere sul file un dataset in formato csv o un formato che ci inveteremo
 
