@@ -32,8 +32,8 @@
     @test c3(y,5) == 66.
     @test c3(x,6) == 0.
 
-    @test change_quantiles(x, 0., 1., "mean") == 0
-    @test change_quantiles(y, 0., 1., "var") == 10.266666666666667
+    @test change_quantiles(x, 0., 1., mean) == 0
+    @test change_quantiles(y, 0., 1., var) == 10.266666666666667
 
     @test cid_ce(x, true) == 0.9534625892455924
     @test cid_ce(y, false) == 28.460498941515414

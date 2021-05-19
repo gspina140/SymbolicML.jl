@@ -145,7 +145,7 @@ First takes a corridor given by the quatiles ql and qh of
 the distribution of x. Then calculates the average, absolute
 value of consecutive changes of the series x inside this corridor.
 """
-function change_quantiles(x::AbstractArray{T} where T<:Real, ql::Float64, qh::Float64, f_agg::String)
+function change_quantiles(x::AbstractArray{T} where T<:Real, ql::Float64, qh::Float64, f_agg::Function)
         # Compute the quantiles
         q = quantile(vec(x), [ql, qh], sorted=true)
 
@@ -158,7 +158,7 @@ function change_quantiles(x::AbstractArray{T} where T<:Real, ql::Float64, qh::Fl
         end
 
         # Return the aggregation function of corridor
-        return getfield(Statistics, Symbol(f_agg))(corr)
+        return f_agg(corr)
 end
 
 #This function calculator is an estimate for a time series complexity
@@ -428,8 +428,6 @@ end
 #     return sum(reoc)
 # end
 
-# Returns the sum fo all values, that are present in the time series more than once
-
 function window_slice(x::AbstractArray{T} where T<:Real;
         from::Union{Missing,Int}=missing,
         to::Union{Missing,Int}=missing)
@@ -437,4 +435,23 @@ function window_slice(x::AbstractArray{T} where T<:Real;
         ismissing(to) && return x[from:end]
         ismissing(from) && return x[1:to]
         return x[from:to]
+end
+
+function paa(x::AbstractArray{T} where T <: Real;
+        n_chunks::Union{Missing,Int}=missing,
+        f::Function=mean,
+        kwargs...)
+    if ismissing(n_chunks) return x
+    else
+        N = length(x)
+        @assert 0 ≤ n_chunks && n_chunks ≤ N "The number of chunks must be in [0,$(N)]"
+
+        y = Array{Float64}(undef, n_chunks) # TODO Float64?
+        for i in 1:n_chunks
+            l = Int(ceil((N*(i-1)/n_chunks) + 1))
+            h = Int(ceil(N*i/n_chunks))
+            y[i] = f(x[l:h]; kwargs...)
+        end
+        return y
+    end
 end
