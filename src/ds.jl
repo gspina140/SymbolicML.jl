@@ -17,7 +17,7 @@ end
 Base.size(mi::ModalInstance) = (nrow(mi.rows),)
 Base.getindex(mi::ModalInstance, i::Int) = mi.rows[i]
 
-struct ModalFrame <: AbstractVector{SubDataFrame}
+mutable struct ModalFrame <: AbstractVector{SubDataFrame}
     # name::String # TODO add name?
     dimension::Int  # (0=static, 1=timeseries, 2=images, ecc.)
     data::DataFrame
@@ -123,7 +123,13 @@ function transform!(ds::ClassificationDataset, f::Function, fid::Int; kwargs...)
     end
 end
 
-function drop_attributes(ds:ClassificationDataset, Dict{} )
+function select_attributes!(ds::ClassificationDataset, frame_attributes::Dict{Int, Array{Int, 1}})
+    frames = collect(keys(frame_attributes))
+
+    for i in 1:length(frames)
+        ds.frames[frames[i]].data = ds.frames[frames[i]].data[:, frame_attributes[frames[i]]]
+    end
+end
 
 # function transform!(ds::ClassificationDataset, f::Function; kwargs...)
 
